@@ -16,12 +16,11 @@
   }
 
   body {
-    @apply bg-cu-bg font-sans text-cu-text;
+    @apply bg-cu-bg font-sans text-[14px] text-cu-text;
     margin: 0;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Native pickers must not shrink below a comfortable touch target. */
   input,
   select,
   textarea,
@@ -31,38 +30,38 @@
 }
 
 @layer components {
-  /* -- Form primitives ------------------------------------------------- */
+  /* -- Form primitives: Bootstrap 3 .form-control proportions ---------- */
 
   .cu-label {
-    @apply block text-[17px] font-bold leading-snug text-cu-text md:text-[16px];
+    @apply mb-[5px] block text-[14px] font-bold leading-snug text-cu-text;
   }
 
   .cu-input {
-    @apply block w-full max-w-full rounded-[6px] border border-cu-border bg-white
-           px-3.5 text-[17px] text-cu-text outline-none transition
+    @apply block w-full max-w-full rounded-[5px] border border-cu-border bg-white/95
+           px-3 text-[14px] text-cu-text shadow-control outline-none transition
            placeholder:text-[#9a9a9a]
-           focus:border-cu-blue focus:ring-1 focus:ring-cu-blue
-           md:text-[15px];
-    min-height: 56px;
+           focus:border-[#8a9ad6] focus:ring-1 focus:ring-[#8a9ad6];
+    min-height: 52px;
   }
 
   @screen md {
     .cu-input {
-      min-height: 44px;
+      min-height: 42px;
     }
   }
 
   .cu-input-readonly {
-    @apply cursor-not-allowed border-cu-border bg-[#EBEBEB] text-[#555]
+    @apply cursor-not-allowed border-cu-border bg-[#EBEBEB] text-[#777]
            focus:border-cu-border focus:ring-0;
   }
 
   .cu-input-error {
-    @apply border-cu-red focus:border-cu-red focus:ring-cu-red;
+    @apply border-cu-note focus:border-cu-note focus:ring-cu-note;
   }
 
   .cu-textarea {
-    @apply cu-input resize-none py-4 md:py-2.5;
+    @apply cu-input py-3.5 md:py-2.5;
+    resize: none;
   }
 
   .cu-select {
@@ -72,11 +71,11 @@
   /* -- Buttons --------------------------------------------------------- */
 
   .cu-btn {
-    @apply inline-flex min-w-[120px] items-center justify-center gap-2
-           rounded-[5px] bg-cu-red px-6 py-3 text-[15px] font-normal uppercase
-           tracking-[0.3px] text-white transition
-           active:brightness-90 md:min-w-[104px] md:py-2.5 md:text-[14px];
-    min-height: 48px;
+    @apply inline-flex min-w-[110px] items-center justify-center gap-2 rounded-[5px]
+           border-0 bg-cu-red px-6 py-2.5 text-[15px] font-medium uppercase
+           tracking-[0.3px] text-white shadow-none transition
+           hover:brightness-95 active:brightness-90;
+    min-height: 44px;
   }
 
   .cu-btn-neutral {
@@ -86,16 +85,16 @@
   /* -- Text helpers ---------------------------------------------------- */
 
   .cu-error {
-    @apply mt-1.5 block text-[14px] font-medium leading-snug text-cu-red md:text-[13px];
+    @apply mt-1.5 block text-[13px] font-medium leading-snug text-cu-note;
   }
 
   .cu-note {
-    @apply text-[16px] font-bold leading-snug text-cu-red md:text-[15px];
+    @apply text-[15px] font-bold leading-snug text-cu-note;
   }
 
-  /* Field group spacing — the screenshots leave generous room on mobile. */
+  /* Field group spacing — generous, per the reference layout. */
   .cu-field {
-    @apply mb-7 md:mb-0;
+    @apply mb-6 md:mb-0;
   }
 }
 
@@ -105,7 +104,6 @@
   }
 }
 
-/* Native date/time controls keep a full-size tap area on phones. */
 input[type='date'],
 input[type='time'] {
   -webkit-appearance: none;
@@ -118,7 +116,6 @@ input[type='time']::-webkit-calendar-picker-indicator {
   opacity: 0.5;
 }
 
-/* Thin scrollbar for the desktop table's own scroll container. */
 .cu-scroll::-webkit-scrollbar {
   height: 8px;
 }

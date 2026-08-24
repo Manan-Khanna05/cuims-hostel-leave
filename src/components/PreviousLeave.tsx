@@ -16,10 +16,10 @@ type Props = {
 export default function PreviousLeave({ leaves, onEditRemarks }: Props) {
   return (
     <section className="mt-8 md:mt-10">
-      <h2 className="text-[38px] font-normal leading-tight text-cu-text md:text-[40px]">
+      <h2 className="text-[26px] font-bold leading-tight text-cu-text md:text-[28px]">
         Previous Leave
       </h2>
-      <div className="mt-4 border-t border-[#E4E4EA]" />
+      <div className="mt-4 border-t border-cu-table" />
 
       {leaves.length === 0 ? (
         <p className="mt-8 text-center text-[15px] text-[#777]">
@@ -46,7 +46,7 @@ export default function PreviousLeave({ leaves, onEditRemarks }: Props) {
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="border-b border-[#E4E4EA] px-3.5 py-3.5 last:border-b-0">
+    <div className="border-b border-cu-table px-3.5 py-3.5 last:border-b-0">
       <span className="text-[15px] font-bold text-cu-text">{label}:-</span>
       <span className="text-[15px] text-cu-text">{children}</span>
     </div>
@@ -61,7 +61,7 @@ function MobileLeaveCard({
   onEditRemarks?: (leave: Leave) => void
 }) {
   return (
-    <article className="mb-4 overflow-hidden rounded-[3px] border border-[#E4E4EA] bg-white">
+    <article className="mb-4 overflow-hidden rounded-[3px] border border-cu-table bg-white">
       <Row label="APPLIED ON">{formatDisplayDate(leave.appliedOn)}</Row>
       <Row label="NAME">
         {leave.name}({leave.uid})
@@ -88,11 +88,11 @@ function DesktopLeaveTable({
     <div className="cu-scroll mt-5 hidden w-full overflow-x-auto md:block">
       <table className="w-full min-w-[760px] border-collapse text-left text-[14px]">
         <thead>
-          <tr className="bg-[#EDEDED]">
+          <tr className="bg-[#F5F5F5]">
             {['Applied on', 'Name', 'Type', 'Purpose', 'Remarks'].map((head) => (
               <th
                 key={head}
-                className="border border-cu-border px-3 py-3 font-bold text-cu-text"
+                className="border border-cu-table px-3 py-3 font-bold text-black"
               >
                 {head}
               </th>
@@ -101,18 +101,18 @@ function DesktopLeaveTable({
         </thead>
         <tbody>
           {leaves.map((leave) => (
-            <tr key={leave.id} className="bg-white align-middle">
-              <td className="whitespace-nowrap border border-cu-border px-3 py-3">
+            <tr key={leave.id} className="bg-white align-middle transition hover:bg-[#F7F7FA]">
+              <td className="whitespace-nowrap border border-cu-table px-3 py-3">
                 {formatDisplayDate(leave.appliedOn)}
               </td>
-              <td className="border border-cu-border px-3 py-3">
+              <td className="border border-cu-table px-3 py-3">
                 {leave.name}({leave.uid})
               </td>
-              <td className="whitespace-nowrap border border-cu-border px-3 py-3">
+              <td className="whitespace-nowrap border border-cu-table px-3 py-3">
                 {typeLabel(leave.leaveType)}
               </td>
-              <td className="border border-cu-border px-3 py-3">{leave.purpose}</td>
-              <td className="border border-cu-border px-3 py-3">
+              <td className="border border-cu-table px-3 py-3">{leave.purpose}</td>
+              <td className="border border-cu-table px-3 py-3">
                 <Remark leave={leave} onEditRemarks={onEditRemarks} />
               </td>
             </tr>
@@ -134,14 +134,14 @@ function Remark({
   onEditRemarks?: (leave: Leave) => void
 }) {
   if (!onEditRemarks) {
-    return <span className="text-cu-remarks">{leave.remarks}</span>
+    return <span className="text-cu-accent">{leave.remarks}</span>
   }
   return (
     <button
       type="button"
       onClick={() => onEditRemarks(leave)}
       title="Click to edit remark"
-      className="text-left text-cu-remarks hover:underline"
+      className="text-left text-cu-accent hover:underline"
     >
       {leave.remarks}
     </button>

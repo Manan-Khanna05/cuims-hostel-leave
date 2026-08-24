@@ -377,7 +377,7 @@ export default function LeaveForm({
             checked={values.confirmed}
             disabled={readOnly}
             onChange={(event) => set('confirmed', event.target.checked)}
-            className="mt-1 h-[19px] w-[19px] shrink-0 accent-cu-blue"
+            className="mt-1 h-[19px] w-[19px] shrink-0 accent-cu-bar"
           />
           <span className="text-[16px] font-bold leading-[1.45] text-cu-text md:text-[15px]">
             {CONFIRM_TEXT}

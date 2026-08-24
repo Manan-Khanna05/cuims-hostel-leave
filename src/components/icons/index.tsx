@@ -6,6 +6,9 @@ import type { SVGProps } from 'react'
 
 type IconProps = SVGProps<SVGSVGElement> & { size?: number }
 
+/** Shape of every icon exported here, for callers that store them in data. */
+export type LucideLikeIcon = (props: IconProps) => JSX.Element
+
 function Svg({ size = 24, children, ...rest }: IconProps) {
   return (
     <svg
@@ -181,6 +184,15 @@ export function AlertIcon(props: IconProps) {
       <path d="M10.3 3.9 2.4 17.4A2 2 0 0 0 4.1 20.4h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
       <line x1="12" y1="9" x2="12" y2="13.4" />
       <line x1="12" y1="16.8" x2="12" y2="16.9" />
+    </Svg>
+  )
+}
+
+/** Cloud / documents glyph used in the topbar. */
+export function CloudIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M7.2 18.5h10a4.3 4.3 0 0 0 .5-8.57 6 6 0 0 0-11.53-1.2A3.9 3.9 0 0 0 7.2 18.5z" />
     </Svg>
   )
 }

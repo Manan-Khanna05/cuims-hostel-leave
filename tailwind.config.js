@@ -3,35 +3,41 @@ export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
-      screens: {
-        // Narrow-phone tweak point (360px devices fall below this).
-        xs: '380px',
-      },
+      screens: { xs: '380px' },
       colors: {
         cu: {
-          blue: '#4658A0',
-          dark: '#30465D',
-          bg: '#F3F3F8',
-          border: '#D5D5D5',
-          red: '#E10600',
-          text: '#222222',
-          remarks: '#0000CC',
-          success: '#9AD47A',
+          bg: '#F3F3F9',        // page background
+          bar: '#4051A4',       // section header bar
+          text: '#333333',      // primary body text
+          accent: '#337AB7',    // card headings, table status links
+          red: '#E10F0F',       // Submit / Cancel
+          note: '#D9534F',      // warning / note text
+          border: '#CCCCCC',    // input + select border
+          table: '#DDDDDD',     // table cell border
+          featured: '#21517B',  // highlighted card background
+          green: '#05F964',     // highlighted card border
+          dark: '#30465D',      // footer / neutral button
+        },
+        chip: {
+          blue: '#E5F3FE',
+          purple: '#F0E9F1',
+          lavender: '#F2F3FF',
         },
         // Exact SweetAlert palette used by the real portal popup.
         sa: {
-          overlay: 'rgba(0,0,0,0.4)',
           heading: '#575757',
           body: '#797979',
           button: '#AEDEF4',
-          buttonHover: '#a1d9f2',
           icon: '#A5DC86',
-          iconRing: 'rgba(165,220,134,0.2)',
         },
       },
       fontFamily: {
-        sans: ['Roboto', 'Arial', 'Helvetica', 'sans-serif'],
-        sa: ['"Open Sans"', 'Roboto', 'Arial', 'sans-serif'],
+        sans: ['Roboto', 'sans-serif'],
+        sa: ['"Open Sans"', 'Roboto', 'sans-serif'],
+      },
+      boxShadow: {
+        card: '0 0 15px 4px rgba(100,98,92,0.06)',
+        control: 'inset 0 1px 1px rgba(0,0,0,.075)',
       },
     },
   },

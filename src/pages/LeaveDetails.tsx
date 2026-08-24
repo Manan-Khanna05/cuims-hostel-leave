@@ -83,7 +83,7 @@ export default function LeaveDetails() {
                 readOnly
                 rows={2}
                 value={leave.remarks}
-                className="cu-textarea cu-input-readonly font-medium text-cu-remarks"
+                className="cu-textarea cu-input-readonly font-medium text-cu-accent"
               />
             </div>
           </div>

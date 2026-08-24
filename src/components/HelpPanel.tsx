@@ -12,30 +12,8 @@ import { CloseIcon, EyeIcon, PencilIcon, TrashIcon } from './icons'
 
 type Tab = 'help' | 'profile' | 'records'
 
-export default function HelpButton() {
-  const [open, setOpen] = useState(false)
-
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label="Hostel leave help and settings"
-        className="fixed right-4 z-40 flex h-[58px] w-[58px] items-center justify-center
-                   rounded-full border-2 border-white bg-[#6E1A1A] text-[30px] font-bold
-                   leading-none text-white shadow-lg active:brightness-110
-                   md:right-5 md:h-[52px] md:w-[52px] md:text-[26px]"
-        style={{ bottom: 'calc(env(safe-area-inset-bottom) + 18px)' }}
-      >
-        ?
-      </button>
-
-      {open && <Panel onClose={() => setOpen(false)} />}
-    </>
-  )
-}
-
-function Panel({ onClose }: { onClose: () => void }) {
+/** Slide-up panel behind the section bar's "?" button. */
+export default function HelpPanel({ onClose }: { onClose: () => void }) {
   const [tab, setTab] = useState<Tab>('help')
 
   // Escape closes the panel, matching the overlay tap.
@@ -77,7 +55,7 @@ function Panel({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        <div className="mt-4 flex gap-1 border-b border-[#E4E4EA] px-5">
+        <div className="mt-4 flex gap-1 border-b border-cu-table px-5">
           {(
             [
               ['help', 'Help'],
@@ -91,7 +69,7 @@ function Panel({ onClose }: { onClose: () => void }) {
               onClick={() => setTab(id)}
               className={[
                 '-mb-px border-b-2 px-3 py-2.5 text-[15px] font-bold transition',
-                tab === id ? 'border-cu-blue text-cu-blue' : 'border-transparent text-[#777]',
+                tab === id ? 'border-cu-bar text-cu-accent' : 'border-transparent text-[#777]',
               ].join(' ')}
             >
               {label}
@@ -105,7 +83,7 @@ function Panel({ onClose }: { onClose: () => void }) {
           {tab === 'records' && <RecordsTab onClose={onClose} />}
         </div>
 
-        <div className="border-t border-[#E4E4EA] px-5 py-4">
+        <div className="border-t border-cu-table px-5 py-4">
           <button type="button" className="cu-btn w-full" onClick={onClose}>
             Close
           </button>
@@ -254,7 +232,7 @@ function RecordsTab({ onClose }: { onClose: () => void }) {
         View, edit or delete a leave record.
       </p>
 
-      <ul className="divide-y divide-[#E4E4EA]">
+      <ul className="divide-y divide-cu-table">
         {leaves.map((leave) => (
           <li key={leave.id} className="flex items-center gap-3 py-3">
             <div className="min-w-0 flex-1">
@@ -262,7 +240,7 @@ function RecordsTab({ onClose }: { onClose: () => void }) {
                 {formatDisplayDate(leave.appliedOn)} · {typeLabel(leave.leaveType)}
               </p>
               <p className="truncate text-[13px] text-[#777]">
-                {leave.purpose} — <span className="text-cu-remarks">{leave.remarks}</span>
+                {leave.purpose} — <span className="text-cu-accent">{leave.remarks}</span>
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-1">
@@ -271,7 +249,7 @@ function RecordsTab({ onClose }: { onClose: () => void }) {
                 title="View"
                 aria-label={`View leave applied on ${formatDisplayDate(leave.appliedOn)}`}
                 onClick={() => go(`/leave/details/${leave.id}`)}
-                className="rounded p-2 text-cu-blue transition hover:bg-cu-blue/10"
+                className="rounded p-2 text-cu-accent transition hover:bg-cu-accent/10"
               >
                 <EyeIcon size={19} />
               </button>
