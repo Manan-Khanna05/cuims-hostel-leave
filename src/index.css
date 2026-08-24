@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Mobile-first: the page scrolls vertically only, never sideways. */
+  html,
+  body,
+  #root {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-cu-bg font-sans text-cu-text;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Native pickers must not shrink below a comfortable touch target. */
+  input,
+  select,
+  textarea,
+  button {
+    font-family: inherit;
+  }
+}
+
+@layer components {
+  /* -- Form primitives ------------------------------------------------- */
+
+  .cu-label {
+    @apply block text-[17px] font-bold leading-snug text-cu-text md:text-[16px];
+  }
+
+  .cu-input {
+    @apply block w-full max-w-full rounded-[6px] border border-cu-border bg-white
+           px-3.5 text-[17px] text-cu-text outline-none transition
+           placeholder:text-[#9a9a9a]
+           focus:border-cu-blue focus:ring-1 focus:ring-cu-blue
+           md:text-[15px];
+    min-height: 56px;
+  }
+
+  @screen md {
+    .cu-input {
+      min-height: 44px;
+    }
+  }
+
+  .cu-input-readonly {
+    @apply cursor-not-allowed border-cu-border bg-[#EBEBEB] text-[#555]
+           focus:border-cu-border focus:ring-0;
+  }
+
+  .cu-input-error {
+    @apply border-cu-red focus:border-cu-red focus:ring-cu-red;
+  }
+
+  .cu-textarea {
+    @apply cu-input resize-none py-4 md:py-2.5;
+  }
+
+  .cu-select {
+    @apply cu-input appearance-none bg-white pr-11;
+  }
+
+  /* -- Buttons --------------------------------------------------------- */
+
+  .cu-btn {
+    @apply inline-flex min-w-[120px] items-center justify-center gap-2
+           rounded-[5px] bg-cu-red px-6 py-3 text-[15px] font-normal uppercase
+           tracking-[0.3px] text-white transition
+           active:brightness-90 md:min-w-[104px] md:py-2.5 md:text-[14px];
+    min-height: 48px;
+  }
+
+  .cu-btn-neutral {
+    @apply cu-btn bg-cu-dark;
+  }
+
+  /* -- Text helpers ---------------------------------------------------- */
+
+  .cu-error {
+    @apply mt-1.5 block text-[14px] font-medium leading-snug text-cu-red md:text-[13px];
+  }
+
+  .cu-note {
+    @apply text-[16px] font-bold leading-snug text-cu-red md:text-[15px];
+  }
+
+  /* Field group spacing — the screenshots leave generous room on mobile. */
+  .cu-field {
+    @apply mb-7 md:mb-0;
+  }
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Native date/time controls keep a full-size tap area on phones. */
+input[type='date'],
+input[type='time'] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator,
+input[type='time']::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+/* Thin scrollbar for the desktop table's own scroll container. */
+.cu-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+.cu-scroll::-webkit-scrollbar-thumb {
+  background: #c7ccd6;
+  border-radius: 4px;
+}
+.cu-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media print {
+  .print\:hidden {
+    display: none !important;
+  }
+}

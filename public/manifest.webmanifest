@@ -1,0 +1,16 @@
+{
+  "name": "CUIMS Hostel Leave Apply",
+  "short_name": "Hostel Leave",
+  "description": "Apply for and track Chandigarh University hostel leave.",
+  "start_url": "/leave",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F3F3F8",
+  "theme_color": "#4658A0",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
