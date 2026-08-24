@@ -1,12 +1,8 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
 import { motion } from 'framer-motion'
-import {
-  CONFIRM_TEXT,
-  DAY_OUT_NOTE,
-  NIGHT_OUT_WARNING,
-  STUDENT,
-} from '../constants/app'
+import { CONFIRM_TEXT, DAY_OUT_NOTE, NIGHT_OUT_WARNING } from '../constants/app'
+import { useAppData } from '../store/AppData'
 import type { LeaveFormErrors, LeaveFormValues, LeaveType } from '../types/leave'
 import { DAY_OUT_WINDOW, calcTotalDays, toMinutes } from '../utils/date'
 import { ChevronDownIcon } from './icons'
@@ -97,6 +93,7 @@ export default function LeaveForm({
   actionsSlot,
   extraRows,
 }: Props) {
+  const { profile } = useAppData()
   const readOnly = mode === 'view'
   const [values, setValues] = useState<LeaveFormValues>(initialValues)
   const [errors, setErrors] = useState<LeaveFormErrors>({})
@@ -135,8 +132,8 @@ export default function LeaveForm({
       ...prev,
       leaveType,
       // Night Out carries the student's numbers; Day Out drops them entirely.
-      parentsNo: leaveType === 'NightOut/Leave' ? prev.parentsNo || STUDENT.parentsNo : '',
-      contactNo: leaveType === 'NightOut/Leave' ? prev.contactNo || STUDENT.contactNo : '',
+      parentsNo: leaveType === 'NightOut/Leave' ? prev.parentsNo || profile.parentsNo : '',
+      contactNo: leaveType === 'NightOut/Leave' ? prev.contactNo || profile.contactNo : '',
     }))
     setErrors({})
     setSubmitted(false)

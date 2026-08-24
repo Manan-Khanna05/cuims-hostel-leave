@@ -1,23 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import LeaveForm, { EMPTY_FORM } from '../components/LeaveForm'
 import PortalShell from '../components/PortalShell'
 import PreviousLeave from '../components/PreviousLeave'
+import RemarksEditor from '../components/RemarksEditor'
 import SuccessModal from '../components/SuccessModal'
-import { STUDENT } from '../constants/app'
-import * as store from '../services/storage'
-import type { Leave, LeaveFormValues, LeaveStatus, LeaveType } from '../types/leave'
+import { useAppData } from '../store/AppData'
+import type { Leave, LeaveFormValues, LeaveType } from '../types/leave'
 import { todayISO } from '../utils/date'
 
 export default function LeaveApply() {
-  const [leaves, setLeaves] = useState<Leave[]>([])
+  const { profile, leaves, addLeave, updateRemarks } = useAppData()
   const [formKey, setFormKey] = useState(0)
   const [pending, setPending] = useState<LeaveFormValues | null>(null)
-
-  const refresh = useCallback(() => setLeaves(store.getLeaves()), [])
-
-  useEffect(() => {
-    refresh()
-  }, [refresh])
+  const [editingRemarks, setEditingRemarks] = useState<Leave | null>(null)
 
   // A fresh object identity on reset makes LeaveForm re-hydrate to blank.
   const initialValues = useMemo(() => ({ ...EMPTY_FORM }), [formKey])
@@ -30,10 +25,10 @@ export default function LeaveApply() {
   function handleOk() {
     if (!pending) return
     const isNight = pending.leaveType === 'NightOut/Leave'
-    store.addLeave({
+    addLeave({
       appliedOn: todayISO(),
-      name: STUDENT.name,
-      uid: STUDENT.uid,
+      name: profile.name,
+      uid: profile.uid,
       leaveType: pending.leaveType as LeaveType,
       parentsNo: isNight ? pending.parentsNo : undefined,
       contactNo: isNight ? pending.contactNo : undefined,
@@ -48,17 +43,6 @@ export default function LeaveApply() {
     })
     setPending(null)
     setFormKey((key) => key + 1)
-    refresh()
-  }
-
-  function handleUpdateRemarks(id: string, remarks: string, status: LeaveStatus) {
-    store.updateLeave(id, { remarks, status })
-    refresh()
-  }
-
-  function handleDelete(id: string) {
-    store.deleteLeave(id)
-    refresh()
   }
 
   return (
@@ -71,10 +55,15 @@ export default function LeaveApply() {
         onCancel={() => setFormKey((key) => key + 1)}
       />
 
-      <PreviousLeave
-        leaves={leaves}
-        onUpdateRemarks={handleUpdateRemarks}
-        onDelete={handleDelete}
+      <PreviousLeave leaves={leaves} onEditRemarks={setEditingRemarks} />
+
+      <RemarksEditor
+        leave={editingRemarks}
+        onSave={(id, remarks, status) => {
+          updateRemarks(id, remarks, status)
+          setEditingRemarks(null)
+        }}
+        onClose={() => setEditingRemarks(null)}
       />
 
       <SuccessModal open={pending !== null} onOk={handleOk} />

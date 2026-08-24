@@ -15,8 +15,12 @@ export const DAY_OUT_NOTE = 'Timing for Day out is 4:30 to 7:00pm'
 
 export const STORAGE_KEY = 'cuims_hostel_leaves'
 export const SEED_FLAG = 'cuims_hostel_leaves_seeded'
+export const PROFILE_KEY = 'cuims_hostel_profile'
 
-/* -- Student profile --------------------------------------------------- */
+/* -- Student profile ---------------------------------------------------
+ * Defaults only. The live values are editable from the help panel and are
+ * persisted under PROFILE_KEY — read them via services/profile.ts.
+ */
 
 export const STUDENT = {
   name: 'MANAN KHANNA',

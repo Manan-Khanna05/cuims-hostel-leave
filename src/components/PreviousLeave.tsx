@@ -1,27 +1,19 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import type { Leave, LeaveStatus } from '../types/leave'
+import type { ReactNode } from 'react'
+import type { Leave } from '../types/leave'
 import { typeLabel } from '../types/leave'
 import { formatDisplayDate } from '../utils/date'
-import ConfirmDialog from './ConfirmDialog'
-import RemarksEditor from './RemarksEditor'
-import { EyeIcon, PencilIcon, TrashIcon } from './icons'
 
 type Props = {
   leaves: Leave[]
-  onUpdateRemarks: (id: string, remarks: string, status: LeaveStatus) => void
-  onDelete: (id: string) => void
+  /** Tapping a remark opens the editor. Omitted on read-only surfaces. */
+  onEditRemarks?: (leave: Leave) => void
 }
 
-export default function PreviousLeave({ leaves, onUpdateRemarks, onDelete }: Props) {
-  const [editing, setEditing] = useState<Leave | null>(null)
-  const [pendingDelete, setPendingDelete] = useState<Leave | null>(null)
-
-  function handleSaveRemarks(id: string, remarks: string, status: LeaveStatus) {
-    onUpdateRemarks(id, remarks, status)
-    setEditing(null)
-  }
-
+/**
+ * The Previous Leave list exactly as the portal shows it — no Action column.
+ * View / Edit / Delete live in the help (?) panel instead.
+ */
+export default function PreviousLeave({ leaves, onEditRemarks }: Props) {
   return (
     <section className="mt-8 md:mt-10">
       <h2 className="text-[38px] font-normal leading-tight text-cu-text md:text-[40px]">
@@ -38,53 +30,21 @@ export default function PreviousLeave({ leaves, onUpdateRemarks, onDelete }: Pro
           {/* Phones: stacked label/value records */}
           <div className="mt-5 md:hidden">
             {leaves.map((leave) => (
-              <MobileLeaveCard
-                key={leave.id}
-                leave={leave}
-                onEditRemarks={() => setEditing(leave)}
-                onDelete={() => setPendingDelete(leave)}
-              />
+              <MobileLeaveCard key={leave.id} leave={leave} onEditRemarks={onEditRemarks} />
             ))}
           </div>
 
           {/* Tablet and up: the real table */}
-          <DesktopLeaveTable
-            leaves={leaves}
-            onEditRemarks={setEditing}
-            onDelete={setPendingDelete}
-          />
+          <DesktopLeaveTable leaves={leaves} onEditRemarks={onEditRemarks} />
         </>
       )}
-
-      <RemarksEditor
-        leave={editing}
-        onSave={handleSaveRemarks}
-        onClose={() => setEditing(null)}
-      />
-
-      <ConfirmDialog
-        open={pendingDelete !== null}
-        title="Delete this leave?"
-        message={
-          pendingDelete
-            ? `The ${typeLabel(pendingDelete.leaveType)} applied on ${formatDisplayDate(
-                pendingDelete.appliedOn,
-              )} will be permanently removed.`
-            : ''
-        }
-        onConfirm={() => {
-          if (pendingDelete) onDelete(pendingDelete.id)
-          setPendingDelete(null)
-        }}
-        onCancel={() => setPendingDelete(null)}
-      />
     </section>
   )
 }
 
 /* -- mobile ------------------------------------------------------------ */
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="border-b border-[#E4E4EA] px-3.5 py-3.5 last:border-b-0">
       <span className="text-[15px] font-bold text-cu-text">{label}:-</span>
@@ -96,14 +56,10 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 function MobileLeaveCard({
   leave,
   onEditRemarks,
-  onDelete,
 }: {
   leave: Leave
-  onEditRemarks: () => void
-  onDelete: () => void
+  onEditRemarks?: (leave: Leave) => void
 }) {
-  const navigate = useNavigate()
-
   return (
     <article className="mb-4 overflow-hidden rounded-[3px] border border-[#E4E4EA] bg-white">
       <Row label="APPLIED ON">{formatDisplayDate(leave.appliedOn)}</Row>
@@ -113,23 +69,8 @@ function MobileLeaveCard({
       <Row label="TYPE">{typeLabel(leave.leaveType)}</Row>
       <Row label="PURPOSE">{leave.purpose}</Row>
       <Row label="REMARKS">
-        <button
-          type="button"
-          onClick={onEditRemarks}
-          className="text-left text-cu-remarks underline-offset-2 active:underline"
-        >
-          {leave.remarks}
-        </button>
+        <Remark leave={leave} onEditRemarks={onEditRemarks} />
       </Row>
-      <div className="flex items-center gap-1 px-3.5 py-3">
-        <span className="text-[15px] font-bold text-cu-text">ACTION:-</span>
-        <ActionButtons
-          leave={leave}
-          onDelete={onDelete}
-          onView={() => navigate(`/leave/details/${leave.id}`)}
-          onEdit={() => navigate(`/leave/edit/${leave.id}`)}
-        />
-      </div>
     </article>
   )
 }
@@ -139,20 +80,16 @@ function MobileLeaveCard({
 function DesktopLeaveTable({
   leaves,
   onEditRemarks,
-  onDelete,
 }: {
   leaves: Leave[]
-  onEditRemarks: (leave: Leave) => void
-  onDelete: (leave: Leave) => void
+  onEditRemarks?: (leave: Leave) => void
 }) {
-  const navigate = useNavigate()
-
   return (
     <div className="cu-scroll mt-5 hidden w-full overflow-x-auto md:block">
-      <table className="w-full min-w-[860px] border-collapse text-left text-[14px]">
+      <table className="w-full min-w-[760px] border-collapse text-left text-[14px]">
         <thead>
           <tr className="bg-[#EDEDED]">
-            {['Applied on', 'Name', 'Type', 'Purpose', 'Remarks', 'Action'].map((head) => (
+            {['Applied on', 'Name', 'Type', 'Purpose', 'Remarks'].map((head) => (
               <th
                 key={head}
                 className="border border-cu-border px-3 py-3 font-bold text-cu-text"
@@ -176,22 +113,7 @@ function DesktopLeaveTable({
               </td>
               <td className="border border-cu-border px-3 py-3">{leave.purpose}</td>
               <td className="border border-cu-border px-3 py-3">
-                <button
-                  type="button"
-                  onClick={() => onEditRemarks(leave)}
-                  title="Click to edit remark"
-                  className="text-left text-cu-remarks hover:underline"
-                >
-                  {leave.remarks}
-                </button>
-              </td>
-              <td className="border border-cu-border px-3 py-3">
-                <ActionButtons
-                  leave={leave}
-                  onDelete={() => onDelete(leave)}
-                  onView={() => navigate(`/leave/details/${leave.id}`)}
-                  onEdit={() => navigate(`/leave/edit/${leave.id}`)}
-                />
+                <Remark leave={leave} onEditRemarks={onEditRemarks} />
               </td>
             </tr>
           ))}
@@ -203,47 +125,25 @@ function DesktopLeaveTable({
 
 /* -- shared ------------------------------------------------------------ */
 
-function ActionButtons({
+/** Blue remark text; tappable when an editor handler is supplied. */
+function Remark({
   leave,
-  onView,
-  onEdit,
-  onDelete,
+  onEditRemarks,
 }: {
   leave: Leave
-  onView: () => void
-  onEdit: () => void
-  onDelete: () => void
+  onEditRemarks?: (leave: Leave) => void
 }) {
-  const applied = formatDisplayDate(leave.appliedOn)
+  if (!onEditRemarks) {
+    return <span className="text-cu-remarks">{leave.remarks}</span>
+  }
   return (
-    <div className="flex items-center gap-1">
-      <button
-        type="button"
-        title="View"
-        aria-label={`View leave applied on ${applied}`}
-        onClick={onView}
-        className="rounded p-2 text-cu-blue transition hover:bg-cu-blue/10 md:p-1.5"
-      >
-        <EyeIcon size={19} />
-      </button>
-      <button
-        type="button"
-        title="Edit"
-        aria-label={`Edit leave applied on ${applied}`}
-        onClick={onEdit}
-        className="rounded p-2 text-cu-dark transition hover:bg-cu-dark/10 md:p-1.5"
-      >
-        <PencilIcon size={19} />
-      </button>
-      <button
-        type="button"
-        title="Delete"
-        aria-label={`Delete leave applied on ${applied}`}
-        onClick={onDelete}
-        className="rounded p-2 text-cu-red transition hover:bg-cu-red/10 md:p-1.5"
-      >
-        <TrashIcon size={19} />
-      </button>
-    </div>
+    <button
+      type="button"
+      onClick={() => onEditRemarks(leave)}
+      title="Click to edit remark"
+      className="text-left text-cu-remarks hover:underline"
+    >
+      {leave.remarks}
+    </button>
   )
 }
